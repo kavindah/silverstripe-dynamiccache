@@ -357,11 +357,15 @@ class DynamicCacheMiddleware implements HTTPMiddleware
 
         // Substitute security id in forms
         $securityID = SecurityToken::getSecurityID();
-        $outputBody = preg_replace(
-            '/\<input type="hidden" name="SecurityID" value="\w+"/',
-            "<input type=\"hidden\" name=\"SecurityID\" value=\"{$securityID}\"",
-            $deserialisedValue['content']
-        );
+        $outputBody = null;
+        if (isset($deserialisedValue['content'])) {
+            $outputBody = preg_replace(
+                '/\<input type="hidden" name="SecurityID" value="\w+"/',
+                "<input type=\"hidden\" name=\"SecurityID\" value=\"{$securityID}\"",
+                $deserialisedValue['content']
+            );
+        }
+
 
         if ($outputBody) {
             $response = HTTPResponse::create();
