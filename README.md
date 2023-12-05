@@ -9,8 +9,8 @@ server heavy operations such as database access.
 
 ## Requirements
 
- * SilverStripe 3.1.7 or above
- * PHP 5.4
+ * SilverStripe 4.*
+ * PHP 5.6
 
 ## How it works
 
@@ -31,7 +31,7 @@ administration level.
 Whenever a page is published the entire cache is cleared for the sake of robustness.
 
 This module will allow individual pages to opt-out of caching by specifying certain headers,
-and will ignore caching on ajax pages or direct requests to controllers (including 
+and will ignore caching on ajax pages or direct requests to controllers (including
 form submissions) by checking for any url-segments that start with an uppercase letter.
 
 ## Installation Instructions
@@ -39,14 +39,7 @@ form submissions) by checking for any url-segments that start with an uppercase 
  * Either extract the module into the dynamiccache folder, or install using composer
 
 ```bash
-composer require "tractorcow/silverstripe-dynamiccache" "4.2.*"
-```
-
- * Edit your .htaccess (or web.config, etc) to redirect requests to the dynamiccache/cache-main.php
-   file instead of the framework/main.php file
-
-```apache
-RewriteRule .* dynamiccache/cache-main.php?url=%1&%{QUERY_STRING} [L]
+composer require "tractorcow/silverstripe-dynamiccache" "dev-master"
 ```
 
 ## Configuration options
@@ -65,7 +58,7 @@ See [dynamiccache.yml](_config/dynamiccache.yml) for the list of configurable op
  * responseHeader - (null|string) Header prefix to use for reporting cache results
  * optInURL - (null|string) If caching should be limited only to specified urls
    set the regular expression here which will be used to match those urls
- * optOutURL - (null|string) If caching should be disabled for specified urls 
+ * optOutURL - (null|string) If caching should be disabled for specified urls
    set the regular expression here which will be used to match those urls
    E.g. '/(^\/admin)|(\/[A-Z])/'
  * segmentHostname - (boolean) Determine if caching should be separated for
@@ -73,7 +66,7 @@ See [dynamiccache.yml](_config/dynamiccache.yml) for the list of configurable op
    content for different hostname, but still uses the same backend, such as the
    subsites module
  * enableAjax - (boolean) Determine if caching should be enabled during ajax
- * cacheDir - (string) Directory where file-based caches are stored 
+ * cacheDir - (string) Directory where file-based caches are stored
    (either absolute, or relative to TEMP_FOLDER).
    Allows usage of %BASE_PATH% and %ASSETS_PATH% placeholders.
    Please ensure that the folder is either located outside of the webroot, or appropriately secured.
@@ -99,13 +92,13 @@ If this should be done in response to a conditional, or non-dataobject related a
 the cache with the below code:
 
 ```php
-DynamicCache::inst()->clear();
+\TractorCow\DynamicCache\DynamicCacheMiddleware::inst()->clear();
 ```
 
 Additionally, if you are logged in (or are in dev mode) the cache can be flushed by adding the 'cache=flush' query
 parameter. E.g.
 
-`http://www.app.com/?cache=flush`
+`http://www.mysite.com/?cache=flush`
 
 ## Customising Cache Behaviour
 
@@ -118,7 +111,7 @@ mobile / non-mobile users (assuming silverstripe/mobile module is installed).
 ```php
 
 	class CacheCustomisation extends DynamicCacheExtension {
-		public function updateEnabled(&$enabled) {
+		public function updateEnabled(&$enabled, HTTPRequest $request) {
 			// Disable caching for this request if a user is logged in
 			if (Member::currentUserID()) $enabled = false;
 
@@ -127,7 +120,7 @@ mobile / non-mobile users (assuming silverstripe/mobile module is installed).
 
 			// Disable caching for this request if we have a message to display
 			// or the request shouldn't be cached for other reasons
-			elseif (Session::get('StatusMessage') || Session::get('Uncachable')) $enabled = false;
+			elseif ($request->getSession()->get('StatusMessage') || $request->getSession()->('Uncachable')) $enabled = false;
 		}
 
 		public function updateCacheKeyFragments(array &$fragments) {

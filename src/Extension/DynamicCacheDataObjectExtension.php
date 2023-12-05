@@ -1,9 +1,12 @@
 <?php
 
-namespace TractorCow\DynamicCache;
+namespace TractorCow\DynamicCache\Extension;
+
+use SilverStripe\ORM\DataExtension;;
 
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\ORM\DataExtension;
+use TractorCow\DynamicCache\DynamicCacheMiddleware;
+
 
 /**
  * Ensures that dataobjects are correctly flushed from the cache on save
@@ -11,8 +14,6 @@ use SilverStripe\ORM\DataExtension;
  * @author Damian Mooyman
  * @package dynamiccache
  */
-
-
 class DynamicCacheDataObjectExtension extends DataExtension
 {
 
@@ -30,7 +31,7 @@ class DynamicCacheDataObjectExtension extends DataExtension
         // Do not clear cache if object is Versioned. Only clear
         // when a user publishes.
         //
-        // DynamicCacheControllerExtension already opts out of caching if
+        // DynamicCacheControllerExtension already opts out of caching if 
         // on ?stage=Stage so this behaviour makes sense.
         //
         if ($this->hasLiveStage()) {
@@ -90,11 +91,10 @@ class DynamicCacheDataObjectExtension extends DataExtension
 
     protected function hasLiveStage()
     {
-        $class = get_class($this->owner);
         // NOTE: Using has_extension over hasExtension as the former
         //       takes subclasses into account.
-        $hasVersioned = $class::has_extension(Versioned::class);
-        if (!$hasVersioned) {
+        $hasVersioned = $this->owner->hasExtension(Versioned::class);
+        if (!$this->owner->hasExtension(Versioned::class)) {
             return false;
         }
         $stages = $this->owner->getVersionedStages();
