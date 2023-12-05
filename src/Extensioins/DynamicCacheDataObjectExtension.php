@@ -23,7 +23,7 @@ class DynamicCacheDataObjectExtension extends DataExtension
      */
     public function onAfterWrite()
     {
-        if (!DynamicCache::config()->cacheClearOnWrite) {
+        if (!DynamicCacheMiddleware::config()->cacheClearOnWrite) {
             return;
         }
 
@@ -37,7 +37,7 @@ class DynamicCacheDataObjectExtension extends DataExtension
             return;
         }
 
-        DynamicCache::inst()->clear();
+        DynamicCacheMiddleware::inst()->clear();
     }
 
     /**
@@ -47,10 +47,10 @@ class DynamicCacheDataObjectExtension extends DataExtension
      */
     public function onBeforeDelete()
     {
-        if (!DynamicCache::config()->cacheClearOnWrite) {
+        if (!DynamicCacheMiddleware::config()->cacheClearOnWrite) {
             return;
         }
-        DynamicCache::inst()->clear();
+        DynamicCacheMiddleware::inst()->clear();
     }
 
     /**
@@ -59,10 +59,10 @@ class DynamicCacheDataObjectExtension extends DataExtension
      */
     public function onBeforeVersionedPublish()
     {
-        if (!DynamicCache::config()->cacheClearOnWrite) {
+        if (!DynamicCacheMiddleware::config()->cacheClearOnWrite) {
             return;
         }
-        DynamicCache::inst()->clear();
+        DynamicCacheMiddleware::inst()->clear();
     }
 
     /**
@@ -70,10 +70,10 @@ class DynamicCacheDataObjectExtension extends DataExtension
      */
     public function onAfterPublish()
     {
-        if (!DynamicCache::config()->cacheClearOnWrite) {
+        if (!DynamicCacheMiddleware::config()->cacheClearOnWrite) {
             return;
         }
-        DynamicCache::inst()->clear();
+        DynamicCacheMiddleware::inst()->clear();
     }
 
     /**
@@ -82,10 +82,10 @@ class DynamicCacheDataObjectExtension extends DataExtension
      */
     public function onAfterVersionedPublish()
     {
-        if (!DynamicCache::config()->cacheClearOnWrite) {
+        if (!DynamicCacheMiddleware::config()->cacheClearOnWrite) {
             return;
         }
-        DynamicCache::inst()->clear();
+        DynamicCacheMiddleware::inst()->clear();
     }
 
     protected function hasLiveStage()

@@ -1,8 +1,10 @@
 <?php
 
-namespace TractorCow\DynamicCache;
+namespace TractorCow\DynamicCache\Extension;
 
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extension;
+
 
 /**
  * Abstract extension class to customise the behaviour of DynamicCache.
@@ -10,8 +12,6 @@ use SilverStripe\Core\Extension;
  * @author Damian Mooyman
  * @package dynamiccache
  */
-
-
 abstract class DynamicCacheExtension extends Extension
 {
 
@@ -22,7 +22,7 @@ abstract class DynamicCacheExtension extends Extension
      * @param boolean &$enabled Out parameter containing the current $enabled flag. The initial value of this will
      * be the result of DynamicCache's internal rules.
      */
-    public function updateEnabled(&$enabled)
+    public function updateEnabled(&$enabled, HTTPRequest $request)
     {
     }
 
