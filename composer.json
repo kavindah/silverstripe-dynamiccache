@@ -19,11 +19,14 @@
         "issues": "http://github.com/tractorcow/silverstripe-dynamiccache/issues"
     },
     "require": {
-        "silverstripe/recipe-cms": "^4.2"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.x-dev"
-        }
-    }
+		"silverstripe/framework": "4.*",
+		"silverstripe/cms": "4.*",
+		"composer/installers": "*"
+	},
+	"extra": {
+		"installer-name": "dynamiccache",
+		"branch-alias": {
+			"dev-master": "4.x-dev"
+		}
+	}
 }
